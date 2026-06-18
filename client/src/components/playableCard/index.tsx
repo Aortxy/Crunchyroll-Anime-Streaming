@@ -71,7 +71,7 @@ const PlayableCardHoverInfo: React.FC<{
 
         <div className="flex flex-1 flex-col pt-3 pb-[0.7625rem] pl-3 sm:p-0">
           <Link
-            href={seriesLink}
+            href={episodeLink}
             prefetch={false}
             className="playable-card-small-title outline-xs z-1"
           >

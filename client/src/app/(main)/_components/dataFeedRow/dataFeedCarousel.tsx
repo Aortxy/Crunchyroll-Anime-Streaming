@@ -101,7 +101,7 @@ const DataFeedCarousel: React.FC<{ dataFeed: DataFeedItem[] }> = ({
                     >
                       <div className="browse-card">
                         <Link
-                          href={seriesLink}
+                          href={episodeLink}
                           prefetch={false}
                           tabIndex={-1}
                           className="relative block"
@@ -120,7 +120,7 @@ const DataFeedCarousel: React.FC<{ dataFeed: DataFeedItem[] }> = ({
                         <div className="browse-card-body">
                           <h4 className="browse-card-body-title">
                             <Link
-                              href={seriesLink}
+                              href={episodeLink}
                               prefetch={false}
                               tabIndex={-1}
                             >
@@ -147,7 +147,7 @@ const DataFeedCarousel: React.FC<{ dataFeed: DataFeedItem[] }> = ({
                         <div className="browse-card-hover">
                           <div className="browse-card-hover-content">
                             <Link
-                              href={seriesLink}
+                              href={episodeLink}
                               prefetch={false}
                               tabIndex={-1}
                               className="browse-card-hover-poster-wrapper"
@@ -164,7 +164,7 @@ const DataFeedCarousel: React.FC<{ dataFeed: DataFeedItem[] }> = ({
                             </Link>
 
                             <Link
-                              href={seriesLink}
+                              href={episodeLink}
                               prefetch={false}
                               className="browse-card-hover-link"
                             />
@@ -172,7 +172,7 @@ const DataFeedCarousel: React.FC<{ dataFeed: DataFeedItem[] }> = ({
                             <div className="browse-card-hover-body">
                               <h4 className="browse-card-body-title mb-3">
                                 <Link
-                                  href={seriesLink}
+                                  href={episodeLink}
                                   prefetch={false}
                                   tabIndex={-1}
                                 >

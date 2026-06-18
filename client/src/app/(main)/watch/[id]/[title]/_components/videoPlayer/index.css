@@ -35,10 +35,20 @@
 
 .seek::-webkit-slider-runnable-track {
   @apply h-[2.5px] rounded-sm bg-[var(--meta-color)] sm:h-[3px];
+  background: linear-gradient(
+    to right,
+    var(--app-background-crunchyroll-orange) var(--seek-before-width),
+    var(--meta-color) var(--seek-before-width)
+  );
 }
 
 .seek::-moz-range-track {
   @apply h-[2.5px] rounded-sm bg-[var(--meta-color)] sm:h-[3px];
+  background: linear-gradient(
+    to right,
+    var(--app-background-crunchyroll-orange) var(--seek-before-width),
+    var(--meta-color) var(--seek-before-width)
+  );
 }
 
 .seek::-webkit-slider-thumb {

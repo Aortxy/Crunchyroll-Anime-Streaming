@@ -136,6 +136,11 @@ const VideoPlayer: React.FC<{ duration: number }> = ({ duration }) => {
               value={seekProgressPercentage}
               onChange={seek}
               className="seek"
+              style={
+                {
+                  "--seek-before-width": `${seekProgressPercentage}%`,
+                } as React.CSSProperties
+              }
             />
           </div>
         </div>
