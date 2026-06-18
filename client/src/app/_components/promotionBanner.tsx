@@ -9,7 +9,7 @@ const PromotionBanner: React.FC<{ dataId: string }> = ({ dataId }) => {
     <div data-id={dataId}>
       <div className="container-cmp container-cmp-has-max-width">
         <Link
-          href={`/series/${83290}/${encodeURIComponent("Dragon Ball DAIMA".toLowerCase().replaceAll(" ", "-"))}`}
+          href="/"
           prefetch={false}
           className="relative block"
         >

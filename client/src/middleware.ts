@@ -16,16 +16,18 @@ export async function middleware(request: NextRequest) {
   }
 
   const cmsURL = process.env.CMS_SERVER;
-  if (!cmsURL)
-    return new NextResponse("CMS server URL is not configured!", {
-      status: 500,
-    });
-  try {
-    const response = await fetch(cmsURL, { method: "HEAD" });
-    if (!response.ok)
-      new NextResponse("CMS server is not running.", { status: 503 });
-  } catch (error) {
-    return new NextResponse("CMS server is not running.", { status: 503 });
+  if (request.nextUrl.pathname.startsWith("/series/")) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  if (cmsURL && request.nextUrl.pathname.startsWith("/cms")) {
+    try {
+      const response = await fetch(cmsURL, { method: "HEAD" });
+      if (!response.ok)
+        return new NextResponse("CMS server is not running.", { status: 503 });
+    } catch (error) {
+      return new NextResponse("CMS server is not running.", { status: 503 });
+    }
   }
 
   return NextResponse.next();

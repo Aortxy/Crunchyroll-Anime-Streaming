@@ -7,6 +7,8 @@ import {
 import Banner from "./_components/banner";
 import DataFeedRow from "./_components/dataFeedRow";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const bannerItems = await getBannerItems();
   const topPicksForYou = await getTopPicksForYou();

@@ -7,7 +7,7 @@ import {
   secondsToFormattedSeconds,
 } from "@/lib/utils";
 
-import { EpisodeCardMini } from "@/app/(main)/watch/[id]/[title]/page.types";
+import { EpisodeCardMini } from "@/app/watch/[id]/[title]/page.types";
 
 import "./common.css";
 import "./playableCardMini.css";

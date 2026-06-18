@@ -4,7 +4,7 @@ import connectToDb from "../connectToDb";
 import { ObjectId } from "mongodb";
 import { getMetaTags, getSeasons, getEpisodes } from "../pipelineStages";
 
-import { Episode } from "@/app/(main)/watch/[id]/[title]/page.types";
+import { Episode } from "@/app/watch/[id]/[title]/page.types";
 import { SERIES, SEASONS, EPISODES } from "../collectionNames";
 
 export async function getTitle(

@@ -10,6 +10,8 @@ import getEpisode, { getTitle } from "@/lib/mongodb/CRUD/getEpisode";
 
 import "./page.css";
 
+export const dynamic = "force-dynamic";
+
 type PageProps = { params: Promise<{ id: string; title: string }> };
 
 export async function generateMetadata(

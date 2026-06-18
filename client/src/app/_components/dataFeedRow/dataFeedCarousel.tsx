@@ -90,7 +90,9 @@ const DataFeedCarousel: React.FC<{ dataFeed: DataFeedItem[] }> = ({
                   const compactAverageRating = getCompactNotation(
                     dataFeedItem.averageRating,
                   );
-                  const episodeLink = `/watch/${dataFeedItem.episodeId}/${cleanString(dataFeedItem.episodeTitle)}`;
+                  const episodeId = dataFeedItem.episodeId || "default";
+                  const episodeTitle = dataFeedItem.episodeTitle || dataFeedItem.title;
+                  const episodeLink = `/watch/${episodeId}/${cleanString(episodeTitle)}`;
 
                   return (
                     <div

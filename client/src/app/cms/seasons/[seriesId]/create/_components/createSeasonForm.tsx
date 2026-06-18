@@ -4,7 +4,7 @@ import { useState, FormEvent } from "react";
 
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-import "@/app/(admin)/cms/cms.css";
+import "@/app/cms/cms.css";
 
 const CreateSeasonForm: React.FC<{ cmsURL: string; seriesId: string }> = ({
   cmsURL,

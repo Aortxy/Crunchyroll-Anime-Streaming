@@ -14,7 +14,7 @@ import { getAttribute } from "@/lib/utils";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
-import "@/app/(admin)/cms/cms.css";
+import "@/app/cms/cms.css";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const MAX_IMAGE_SIZE = 6 * 1024 * 1024;

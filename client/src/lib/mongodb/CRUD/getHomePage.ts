@@ -9,8 +9,8 @@ import {
   getSeasons,
 } from "../pipelineStages";
 
-import { BannerItem } from "@/app/(main)/_components/banner/index.types";
-import { DataFeedItem } from "@/app/(main)/_components/dataFeedRow/index.types";
+import { BannerItem } from "@/app/_components/banner/index.types";
+import { DataFeedItem } from "@/app/_components/dataFeedRow/index.types";
 
 import {
   ASIA_COUNTRIES,

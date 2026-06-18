@@ -70,4 +70,9 @@ export class EpisodeController {
   getEpisode(@Param('id') id: string) {
     return this.episodeService.getEpisode(id);
   }
+
+  @Get(':id/stream')
+  getStream(@Param('id') id: string) {
+    return this.episodeService.getStream(id);
+  }
 }

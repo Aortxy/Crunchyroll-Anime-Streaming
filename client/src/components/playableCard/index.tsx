@@ -11,7 +11,7 @@ import {
 import Dropdown from "@/components/dropdown";
 import MarkEpisodeAsWatched from "@/components/dropdown/menuItems/markEpisodeAsWatched";
 
-import { Episode } from "@/app/(main)/watch/[id]/[title]/page.types";
+import { Episode } from "@/app/watch/[id]/[title]/page.types";
 
 import { HiOutlineCalendar } from "react-icons/hi";
 import { HiOutlinePlay } from "react-icons/hi2";
@@ -24,9 +24,8 @@ const PlayableCardHoverInfo: React.FC<{
   episodeLink: string;
   episodeTitle: string;
   episode: Episode;
-  seriesLink: string;
   title: string;
-}> = ({ episodeLink, episodeTitle, episode, seriesLink, title }) => {
+}> = ({ episodeLink, episodeTitle, episode, title }) => {
   const releaseDate = getLocaleDate(episode.releaseDate);
   const playButtonText = getTitleWithSeasonAndEpisodeNumber(
     episode.season ?? 1,
@@ -62,15 +61,13 @@ const PlayableCardHoverInfo: React.FC<{
         </div>
 
         <div className="flex flex-1 flex-col pt-3 pb-[0.7625rem] pl-3 sm:p-0">
-          <Link
-            href={episodeLink}
-            prefetch={false}
+          <div
             className="playable-card-small-title outline-xs z-1"
           >
-            <small className="app-transition-colors hover:text-white hover:underline focus-visible:text-white focus-visible:underline">
+            <small className="app-transition-colors">
               {title}
             </small>
-          </Link>
+          </div>
 
           <h4 className="playable-card-title playable-card-hover-title">
             {episodeTitle}
@@ -148,7 +145,6 @@ const PlayableCard: React.FC<{
         episodeLink={episodeLink}
         episodeTitle={episodeTitle}
         episode={episode}
-        seriesLink={episodeLink}
         title={title}
       />
 

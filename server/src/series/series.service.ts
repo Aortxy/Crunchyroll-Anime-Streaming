@@ -63,6 +63,21 @@ export class SeriesService {
     return series;
   }
 
+  async getSeriesEpisodes(id: string) {
+    const series = await this.seriesModel
+      .findById(id)
+      .populate({
+        path: 'seasons',
+        populate: {
+          path: 'episodes',
+        },
+      })
+      .exec();
+    if (!series)
+      throw new HttpException('Series not found.', HttpStatus.NOT_FOUND);
+    return series.seasons;
+  }
+
   async getAllSeries() {
     return this.seriesModel.find().exec();
   }

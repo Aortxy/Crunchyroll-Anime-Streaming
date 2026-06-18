@@ -139,6 +139,11 @@ export class SeriesController {
     return this.seriesService.getSeries(id);
   }
 
+  @Get(':id/episodes')
+  getSeriesEpisodes(@Param('id') id: string) {
+    return this.seriesService.getSeriesEpisodes(id);
+  }
+
   @Get()
   getAllSeries() {
     return this.seriesService.getAllSeries();

@@ -70,4 +70,13 @@ export class EpisodeService {
     if (!episode) throw new BadRequestException('Episode not found.');
     return episode;
   }
+
+  async getStream(id: string) {
+    const episode = await this.episodeModel.findById(id).select('media duration').exec();
+    if (!episode) throw new BadRequestException('Episode not found.');
+    return {
+      streamUrl: episode.media,
+      duration: episode.duration,
+    };
+  }
 }
