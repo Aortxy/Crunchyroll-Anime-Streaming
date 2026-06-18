@@ -43,8 +43,6 @@ const CurrentMedia: React.FC<{
   description,
   details,
 }) => {
-  const seriesLink = `/series/${seriesId}/${cleanString(seriesTitle)}`;
-
   const compactLikes = getCompactNotation(likes);
   const compactDislikes = getCompactNotation(dislikes);
 
@@ -55,13 +53,9 @@ const CurrentMedia: React.FC<{
       <div className="current-media-info flex-1">
         <div className="current-media-header mb-3 flex justify-between border-b-2 border-solid border-[var(--app-background-secondary)] pb-3 sm:mb-1 sm:border-none sm:pb-0">
           <div className="current-media-parent-ref mr-1 flex flex-[0_1_auto] flex-col sm:flex-row sm:flex-wrap sm:self-center">
-            <Link
-              href={seriesLink}
-              prefetch={false}
-              className="show-title-link app-transition-colors mb-1 text-[var(--app-background-crunchyroll-orange)] sm:flex sm:items-center"
-            >
+            <div className="show-title mb-1 text-[var(--app-background-crunchyroll-orange)] sm:flex sm:items-center">
               <h4 className="text-base font-semibold">{seriesTitle}</h4>
-            </Link>
+            </div>
 
             <AverageRating
               align="left"

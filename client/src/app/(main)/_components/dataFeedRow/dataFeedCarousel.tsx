@@ -87,7 +87,6 @@ const DataFeedCarousel: React.FC<{ dataFeed: DataFeedItem[] }> = ({
             <div className="carousel-scroller-wrapper">
               <div ref={trackRef} className="carousel-scroller-track">
                 {dataFeed.map((dataFeedItem) => {
-                  const seriesLink = `/series/${dataFeedItem.id}/${cleanString(dataFeedItem.title)}`;
                   const compactAverageRating = getCompactNotation(
                     dataFeedItem.averageRating,
                   );

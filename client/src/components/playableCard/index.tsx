@@ -8,10 +8,10 @@ import {
   secondsToFormattedSeconds,
 } from "@/lib/utils";
 
-import Dropdown from "@/app/(main)/series/[id]/[title]/_components/dropdown";
-import MarkEpisodeAsWatched from "@/app/(main)/series/[id]/[title]/_components/dropdown/menuItems/markEpisodeAsWatched";
+import Dropdown from "@/components/dropdown";
+import MarkEpisodeAsWatched from "@/components/dropdown/menuItems/markEpisodeAsWatched";
 
-import { Season, Episode } from "@/providers/seaonEpisodes/index.types";
+import { Episode } from "@/app/(main)/watch/[id]/[title]/page.types";
 
 import { HiOutlineCalendar } from "react-icons/hi";
 import { HiOutlinePlay } from "react-icons/hi2";
@@ -23,21 +23,13 @@ import "./index.css";
 const PlayableCardHoverInfo: React.FC<{
   episodeLink: string;
   episodeTitle: string;
-  currentSeason: Season;
   episode: Episode;
   seriesLink: string;
   title: string;
-}> = ({
-  episodeLink,
-  episodeTitle,
-  currentSeason,
-  episode,
-  seriesLink,
-  title,
-}) => {
+}> = ({ episodeLink, episodeTitle, episode, seriesLink, title }) => {
   const releaseDate = getLocaleDate(episode.releaseDate);
   const playButtonText = getTitleWithSeasonAndEpisodeNumber(
-    currentSeason.season,
+    episode.season ?? 1,
     episode.episode,
     "",
     "",
@@ -119,14 +111,12 @@ const PlayableCardHoverInfo: React.FC<{
 const PlayableCard: React.FC<{
   seriesId: string;
   title: string;
-  currentSeason: Season;
   episode: Episode;
-}> = ({ seriesId, title, currentSeason, episode }) => {
+}> = ({ seriesId, title, episode }) => {
   const episodeLink = `/watch/${episode.id}/${cleanString(episode.title)}`;
-  const seriesLink = `/series/${seriesId}/${cleanString(title)}`;
 
   const episodeTitle = getTitleWithSeasonAndEpisodeNumber(
-    currentSeason.season,
+    episode.season ?? 1,
     episode.episode,
     episode.title,
   );
@@ -157,9 +147,8 @@ const PlayableCard: React.FC<{
       <PlayableCardHoverInfo
         episodeLink={episodeLink}
         episodeTitle={episodeTitle}
-        currentSeason={currentSeason}
         episode={episode}
-        seriesLink={seriesLink}
+        seriesLink={episodeLink}
         title={title}
       />
 

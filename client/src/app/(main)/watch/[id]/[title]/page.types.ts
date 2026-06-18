@@ -9,7 +9,9 @@ export type EpisodeCardMini = {
 };
 
 export type Episode = {
+  id: string;
   episode: string;
+  season?: number;
   title: string;
   thumbnail: string;
   duration: number;

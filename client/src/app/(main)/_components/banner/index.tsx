@@ -49,7 +49,6 @@ const Banner: React.FC<{ bannerItems: BannerItem[] }> = ({ bannerItems }) => {
           const ariaCurrent = currentActiveCard === index;
           const tabIndex = currentActiveCard === index ? 0 : -1;
 
-          const seriesLink = `/series/${bannerItem.id}/${cleanString(bannerItem.title)}`;
           const episodeLink = `/watch/${bannerItem.episodeId}/${cleanString(bannerItem.episodeTitle)}`;
 
           return (
@@ -86,7 +85,7 @@ const Banner: React.FC<{ bannerItems: BannerItem[] }> = ({ bannerItems }) => {
                   <div className="carousel-card-title">
                     <Link
                       tabIndex={tabIndex}
-                      href={seriesLink}
+                      href={episodeLink}
                       prefetch={false}
                       className="carousel-card-logo"
                     >
