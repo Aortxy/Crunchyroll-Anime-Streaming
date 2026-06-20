@@ -5,6 +5,7 @@ import { randomBytes } from 'crypto';
 import {
   Controller,
   Post,
+  Get,
   Param,
   Body,
   UseInterceptors,
@@ -63,5 +64,15 @@ export class EpisodeController {
     if (!media) throw new BadRequestException('Media is required.');
 
     return this.episodeService.createEpisode(seriesId, seasonId, media, dto);
+  }
+
+  @Get(':id')
+  getEpisode(@Param('id') id: string) {
+    return this.episodeService.getEpisode(id);
+  }
+
+  @Get(':id/stream')
+  getStream(@Param('id') id: string) {
+    return this.episodeService.getStream(id);
   }
 }
