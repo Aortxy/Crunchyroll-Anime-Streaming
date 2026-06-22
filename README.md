@@ -98,21 +98,32 @@ Frontend akan menangani penyesuaian tampilan gambar ini.
 #### 2. Detail Series & Episode
 
 - **`GET /api/v1/series/:id`**
-  - **Tujuan**: Menampilkan halaman detail sebuah series.
+  - **Tujuan**: Menampilkan halaman detail sebuah series, menyediakan semua data yang dilingkari di gambar Anda.
   - **Struktur Respons**: `Object Series`
     ```json
     {
       "title": "string",
-      "posterImage": "string (URL poster 2:3)",
       "bannerImage": "string (URL banner 16:9)",
-      "averageRating": "number",
       "description": "string",
-      "genres": ["string", ...],
-      "metaTags": ["string", ...],
+      "genres": ["Action", "Fantasy", "Shonen"],
+      "metaTags": ["Sub | Dub", "HD"],
+      "startWatching": {
+        "episodeId": "string",
+        "seasonNumber": 1,
+        "episodeNumber": 1
+      },
+      "userStatus": {
+        "isInWatchlist": "boolean",
+        "progress": {
+          "totalEpisodesInSeries": "number",
+          "watchedEpisodesInSeries": "number"
+        }
+      },
+      "averageRating": "number",
       "details": { "releaseYear": "string", "status": "string" },
       "seasons": [
         {
-          "id": "string", // ID Season
+          "id": "string",
           "season": "number",
           "title": "string",
           "totalEpisodes": "number"
@@ -121,14 +132,29 @@ Frontend akan menangani penyesuaian tampilan gambar ini.
     }
     ```
 
+- **`GET /api/v1/series/:seriesId/seasons/:seasonId/episodes`**
+  - **Tujuan**: Mengambil daftar semua episode untuk musim tertentu.
+  - **Struktur Respons**: `Array of EpisodeItem`
+    ```json
+    [
+      {
+        "id": "string",
+        "title": "string",
+        "episode": "number",
+        "thumbnail": "string (URL gambar thumbnail)",
+        "duration": "number"
+      }
+    ]
+    ```
+
 - **`GET /api/v1/episodes/:id`**
   - **Tujuan**: Mengambil data untuk halaman pemutar video.
   - **Struktur Respons**: `Object Episode`
     ```json
     {
-      "title": "string", // Judul episode
+      "title": "string",
       "thumbnail": "string (URL gambar thumbnail episode)",
-      "duration": "number", // dalam detik
+      "duration": "number",
       "description": "string",
       "media": {
         "hls": { "main": "string (URL ke master.m3u8)" }
