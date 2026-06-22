@@ -1,4 +1,0 @@
-docker exec -it zookeeper bash
-zkCli.sh
-deleteall /brokers/ids/1001
-quit

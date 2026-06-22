@@ -1,68 +1,157 @@
-# Crunchyroll Anime/Video Streaming Platform
+# Streaming Service Monorepo
 
-🔗 **Live Demo**: [Crunchyroll Anime Streaming](https://crunchyroll-anime-streaming-flame.vercel.app/)  
-🔗 **Reference**: [Crunchyroll](https://www.crunchyroll.com/)  
+Selamat datang di proyek Layanan Streaming. Proyek ini telah direstrukturisasi menjadi arsitektur monorepo yang modern dan skalabel, memisahkan antara frontend dan backend.
 
-A **high-performance anime streaming platform** inspired by Crunchyroll, offering **ad-free streaming, HLS video playback, efficient content management, and optimized data fetching**.
-
----
-
-## 🚀 About
-
-This platform provides **seamless anime streaming** with a fully custom **HLS-compatible player**, efficient **MongoDB pipelines**, and **high-throughput video processing**. The system is designed with **Next.js 15, Nest.js, Kafka, and MongoDB** to ensure **scalability, speed, and smooth user experience**.
-
-- **Frontend (Next.js 15)** – Handles UI, data fetching, and rendering.
-- **Backend (Nest.js CMS)** – Manages content creation, transcoding, and API services.
-- **HLS Streaming** – Optimized **video playback with a fully custom player**.
-- **Kafka & ffmpeg** – Asynchronous **video transcoding and media uploads**.
-- **MongoDB** – Stores user data, content metadata, and recommendations.
-- **Caching & Location-Based Recommendations** – Faster loading and **personalized content**.
+- **`/client`**: Aplikasi Frontend Next.js yang berfungsi sebagai antarmuka pengguna (UI).
+- **`/server`**: (DEPRECATED) Kode backend Nest.js yang lama. Direktori ini sekarang usang dan akan digantikan oleh backend Go baru Anda.
+- **Backend Go (Tugas Anda)**: Anda akan membuat layanan backend baru menggunakan Go yang berfungsi sebagai API untuk aplikasi Next.js.
 
 ---
 
-## 🔥 Features
+## Arsitektur Baru: Frontend Terpisah & Backend API
 
-- **Ad-Free Streaming** – Enjoy uninterrupted anime playback.
-- **HLS-Compatible Player** – Fully custom **HLS.js-based** video player.
-- **High-Performance MongoDB Pipelines** – **Efficient queries** for fast data retrieval.
-- **Location-Based Recommendations** – **Personalized content** based on user region.
-- **Concurrent Uploads & API Retry Mechanisms** – **Optimized throughput** for media handling.
-- **CMS with Nest.js** – Backend manages **video transcoding & content workflows**.
+Aplikasi ini sekarang mengikuti pendekatan "headless", di mana frontend (Next.js) sepenuhnya terpisah dari backend. Semua data diperoleh melalui panggilan API ke backend Go.
 
----
+### Alur Kerja Pengembangan
 
-## 🛠 Tech Stack
+1.  **Backend (Go)**: Bangun server API Go Anda. Server ini akan berfungsi sebagai perantara (proxy/middleware) yang mengambil data dari API pihak ketiga, mengubahnya sesuai kebutuhan, dan menyediakannya sebagai REST API untuk frontend.
+2.  **Frontend (Next.js)**: Jalankan aplikasi Next.js. Aplikasi ini akan memanggil endpoint API Go Anda untuk mengambil dan menampilkan data.
 
-- **Frontend**: Next.js 15, Tailwind CSS, HLS.js
-- **Backend**: Nest.js, MongoDB, Kafka, ffmpeg
-- **Storage**: Supabase (S3 Bucket) for media & static assets
-- **Streaming**: HLS (HTTP Live Streaming)
-- **Processing**: Kafka-powered **asynchronous media transcoding & uploads**
+### Konfigurasi Frontend
 
----
+Untuk menghubungkan frontend ke backend Anda, ikuti langkah-langkah berikut:
 
-## 🏗 System Design Overview
+1.  Pindah ke direktori `client`:
+    ```bash
+    cd client
+    ```
+2.  Buat file `.env.local`:
+    ```bash
+    touch .env.local
+    ```
+3.  Tambahkan URL base API Anda ke file tersebut. Jika backend Anda berjalan di `localhost:8080`, maka:
+    ```
+    NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
+    ```
+4.  Instal dependensi dan jalankan server pengembangan:
+    ```bash
+    yarn install
+    yarn dev
+    ```
 
-- **Frontend (Next.js 15)** – Handles UI rendering, API integration, and SEO optimization.
-- **Backend (Nest.js CMS)** – **Content management, video processing, and transcoding.**
-- **Kafka Message Queue** – **Asynchronous media uploads & processing with ffmpeg.**
-- **MongoDB** – **Efficient data storage & aggregation pipelines.**
-- **Supabase S3 Storage** – **Secure static asset & media storage.**
-
----
-
-## 🎯 Planned Features
-
-- **User Authentication** – Secure **sign-up & login**.
-- **User Profiles** – Watchlists & personalization.
-- **Enhanced Caching** – Faster **data fetching** & performance.
+Aplikasi Next.js sekarang akan berjalan (biasanya di `localhost:3000`) dan siap menerima data dari API Anda.
 
 ---
 
-## 📌 Status
+## Spesifikasi API Backend (Kontrak Data)
 
-✅ **Frontend: Fully Completed**  
-⚙️ **Backend: High-Performance CMS with Video Transcoding & Uploads**  
-🛠 **Planned Features: Authentication & User Profile Management**  
+Backend Go Anda **HARUS** menyediakan endpoint berikut dan mengembalikan data JSON dalam format yang ditentukan agar frontend dapat berfungsi dengan benar.
 
-Stay tuned for updates! 🚀
+### Struktur Gambar yang Disederhanakan
+
+Untuk menyederhanakan manajemen aset, setiap entitas (Series, Episode) yang memiliki gambar harus menyediakan dua format URL utama:
+
+- `posterImage`: URL ke gambar poster **vertikal** (rasio ~2:3). Digunakan untuk kartu konten.
+- `bannerImage`: URL ke gambar banner **horizontal** (rasio ~16:9). Digunakan sebagai latar belakang header/hero.
+
+Frontend akan menangani penyesuaian tampilan gambar ini.
+
+---
+
+### Endpoints yang Diperlukan
+
+#### 1. Halaman Utama
+
+- **`GET /api/v1/home/banner`**
+  - **Tujuan**: Mengisi hero banner di halaman utama.
+  - **Struktur Respons**: `Array of BannerItem`
+    ```json
+    [
+      {
+        "id": "string", // ID dari series
+        "episodeId": "string", // ID dari episode yang akan diputar
+        "title": "string", // Judul series
+        "bannerImage": "string (URL gambar banner 16:9)",
+        "description": "string",
+        "genres": ["string", "string"],
+        "metaTags": ["string", "string"]
+      }
+    ]
+    ```
+
+- **`GET /api/v1/home/top-picks`** (atau endpoint serupa seperti `/newly-updated`)
+  - **Tujuan**: Mengisi baris kartu konten.
+  - **Struktur Respons**: `Array of DataFeedItem`
+    ```json
+    [
+      {
+        "id": "string", // ID dari series
+        "episodeId": "string", // ID dari episode yang akan diputar
+        "title": "string", // Judul series
+        "posterImage": "string (URL gambar poster 2:3)",
+        "averageRating": "number",
+        "episodeTitle": "string" // Judul episode terkait
+      }
+    ]
+    ```
+
+#### 2. Detail Series & Episode
+
+- **`GET /api/v1/series/:id`**
+  - **Tujuan**: Menampilkan halaman detail sebuah series.
+  - **Struktur Respons**: `Object Series`
+    ```json
+    {
+      "title": "string",
+      "posterImage": "string (URL poster 2:3)",
+      "bannerImage": "string (URL banner 16:9)",
+      "averageRating": "number",
+      "description": "string",
+      "genres": ["string", ...],
+      "metaTags": ["string", ...],
+      "details": { "releaseYear": "string", "status": "string" },
+      "seasons": [
+        {
+          "id": "string", // ID Season
+          "season": "number",
+          "title": "string",
+          "totalEpisodes": "number"
+        }
+      ]
+    }
+    ```
+
+- **`GET /api/v1/episodes/:id`**
+  - **Tujuan**: Mengambil data untuk halaman pemutar video.
+  - **Struktur Respons**: `Object Episode`
+    ```json
+    {
+      "title": "string", // Judul episode
+      "thumbnail": "string (URL gambar thumbnail episode)",
+      "duration": "number", // dalam detik
+      "description": "string",
+      "media": {
+        "hls": { "main": "string (URL ke master.m3u8)" }
+      },
+      "series": {
+        "id": "string",
+        "title": "string"
+      },
+      "prevEpisode": { "id": "string", "title": "string", "season": "number" } | null,
+      "nextEpisode": { "id": "string", "title": "string", "season": "number" } | null
+    }
+    ```
+
+#### 3. Data Tambahan
+
+- **`GET /api/v1/genres`**
+- **`GET /api/v1/meta-tags`**
+  - **Tujuan**: Mengisi filter dan menampilkan tag.
+  - **Struktur Respons**: `Array of Objects`
+    ```json
+    [
+      { "id": "string", "title": "string" }
+    ]
+    ```
+
+Dengan mengikuti panduan ini, Anda dapat membangun backend Go yang akan terintegrasi dengan mulus dengan frontend Next.js yang sudah ada.

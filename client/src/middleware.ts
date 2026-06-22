@@ -1,36 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
-
-import { getClientIP } from "./lib/utils";
 import { ipAddress, geolocation } from "@vercel/functions";
 
 export async function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname === "/") {
-    const ip = ipAddress(request);
-    const geo = geolocation(request);
+  // Ambil IP dan geolokasi untuk semua request
+  const ip = ipAddress(request);
+  const geo = geolocation(request);
 
-    const headers = new Headers(request.headers);
-    headers.set("x-client-ip", ip ?? getClientIP(headers));
-    headers.set("x-client-geo-country", geo.country ?? "GLOBAL");
+  // Buat header baru berdasarkan request yang masuk
+  const headers = new Headers(request.headers);
 
-    return NextResponse.next({ request: { headers } });
-  }
+  // Set header kustom untuk IP dan negara
+  // Gunakan "127.0.0.1" dan "US" sebagai fallback jika tidak terdeteksi
+  headers.set("x-client-ip", ip ?? "127.0.0.1");
+  headers.set("x-client-geo-country", geo?.country ?? "US");
 
-  const cmsURL = process.env.CMS_SERVER;
-  if (!cmsURL)
-    return new NextResponse("CMS server URL is not configured!", {
-      status: 500,
-    });
-  try {
-    const response = await fetch(cmsURL, { method: "HEAD" });
-    if (!response.ok)
-      new NextResponse("CMS server is not running.", { status: 503 });
-  } catch (error) {
-    return new NextResponse("CMS server is not running.", { status: 503 });
-  }
-
-  return NextResponse.next();
+  // Lanjutkan request dengan header yang sudah dimodifikasi
+  return NextResponse.next({ request: { headers } });
 }
 
 export const config = {
-  matcher: ["/", "/cms/:path*"],
+  // Jalankan middleware ini untuk semua rute
+  matcher: "/((?!_next/static|favicon.ico).+)",
 };
