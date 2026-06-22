@@ -1,183 +1,147 @@
-# Streaming Service Monorepo
+# Proyek Layanan Streaming: Spesifikasi API Backend
 
-Selamat datang di proyek Layanan Streaming. Proyek ini telah direstrukturisasi menjadi arsitektur monorepo yang modern dan skalabel, memisahkan antara frontend dan backend.
+## 1. Ikhtisar
 
-- **`/client`**: Aplikasi Frontend Next.js yang berfungsi sebagai antarmuka pengguna (UI).
-- **`/server`**: (DEPRECATED) Kode backend Nest.js yang lama. Direktori ini sekarang usang dan akan digantikan oleh backend Go baru Anda.
-- **Backend Go (Tugas Anda)**: Anda akan membuat layanan backend baru menggunakan Go yang berfungsi sebagai API untuk aplikasi Next.js.
+Selamat datang di proyek Layanan Streaming. Dokumen ini adalah **kontrak API** dan sumber kebenaran tunggal untuk membangun layanan backend Go.
 
----
+Frontend adalah aplikasi Next.js yang sepenuhnya "headless". Semua data yang ditampilkannya berasal dari panggilan ke endpoint API yang Anda buat. Struktur JSON yang didefinisikan di sini **HARUS** diikuti dengan tepat agar aplikasi frontend dapat berfungsi.
 
-## Arsitektur Baru: Frontend Terpisah & Backend API
-
-Aplikasi ini sekarang mengikuti pendekatan "headless", di mana frontend (Next.js) sepenuhnya terpisah dari backend. Semua data diperoleh melalui panggilan API ke backend Go.
-
-### Alur Kerja Pengembangan
-
-1.  **Backend (Go)**: Bangun server API Go Anda. Server ini akan berfungsi sebagai perantara (proxy/middleware) yang mengambil data dari API pihak ketiga, mengubahnya sesuai kebutuhan, dan menyediakannya sebagai REST API untuk frontend.
-2.  **Frontend (Next.js)**: Jalankan aplikasi Next.js. Aplikasi ini akan memanggil endpoint API Go Anda untuk mengambil dan menampilkan data.
-
-### Konfigurasi Frontend
-
-Untuk menghubungkan frontend ke backend Anda, ikuti langkah-langkah berikut:
-
-1.  Pindah ke direktori `client`:
-    ```bash
-    cd client
-    ```
-2.  Buat file `.env.local`:
-    ```bash
-    touch .env.local
-    ```
-3.  Tambahkan URL base API Anda ke file tersebut. Jika backend Anda berjalan di `localhost:8080`, maka:
-    ```
-    NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
-    ```
-4.  Instal dependensi dan jalankan server pengembangan:
-    ```bash
-    yarn install
-    yarn dev
-    ```
-
-Aplikasi Next.js sekarang akan berjalan (biasanya di `localhost:3000`) dan siap menerima data dari API Anda.
+**URL Base API Konfigurasi Frontend:**
+Untuk menghubungkan frontend ke backend Go Anda, buat file `client/.env.local` dan tambahkan baris berikut (sesuaikan port jika perlu):
+```
+NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
+```
 
 ---
 
-## Spesifikasi API Backend (Kontrak Data)
+## 2. Endpoints Halaman Utama (Homepage)
 
-Backend Go Anda **HARUS** menyediakan endpoint berikut dan mengembalikan data JSON dalam format yang ditentukan agar frontend dapat berfungsi dengan benar.
+Data untuk halaman utama diambil melalui beberapa endpoint yang berbeda.
 
-### Struktur Gambar yang Disederhanakan
+### 2.1. Banner Utama
 
-Untuk menyederhanakan manajemen aset, setiap entitas (Series, Episode) yang memiliki gambar harus menyediakan dua format URL utama:
-
-- `posterImage`: URL ke gambar poster **vertikal** (rasio ~2:3). Digunakan untuk kartu konten.
-- `bannerImage`: URL ke gambar banner **horizontal** (rasio ~16:9). Digunakan sebagai latar belakang header/hero.
-
-Frontend akan menangani penyesuaian tampilan gambar ini.
-
----
-
-### Endpoints yang Diperlukan
-
-#### 1. Halaman Utama
-
-- **`GET /api/v1/home/banner`**
-  - **Tujuan**: Mengisi hero banner di halaman utama.
-  - **Struktur Respons**: `Array of BannerItem`
-    ```json
-    [
-      {
-        "id": "string", // ID dari series
-        "episodeId": "string", // ID dari episode yang akan diputar
-        "title": "string", // Judul series
-        "bannerImage": "string (URL gambar banner 16:9)",
-        "description": "string",
-        "genres": ["string", "string"],
-        "metaTags": ["string", "string"]
-      }
-    ]
-    ```
-
-- **`GET /api/v1/home/top-picks`** (atau endpoint serupa seperti `/newly-updated`)
-  - **Tujuan**: Mengisi baris kartu konten.
-  - **Struktur Respons**: `Array of DataFeedItem`
-    ```json
-    [
-      {
-        "id": "string", // ID dari series
-        "episodeId": "string", // ID dari episode yang akan diputar
-        "title": "string", // Judul series
-        "posterImage": "string (URL gambar poster 2:3)",
-        "averageRating": "number",
-        "episodeTitle": "string" // Judul episode terkait
-      }
-    ]
-    ```
-
-#### 2. Detail Series & Episode
-
-- **`GET /api/v1/series/:id`**
-  - **Tujuan**: Menampilkan halaman detail sebuah series, menyediakan semua data yang dilingkari di gambar Anda.
-  - **Struktur Respons**: `Object Series`
-    ```json
+- **Endpoint**: `GET /api/v1/home/banner`
+- **Tujuan**: Mengambil item yang akan ditampilkan di carousel banner utama.
+- **Struktur Respons**: `Array<Object BannerItem>`
+  ```json
+  [
     {
+      "id": "string",
       "title": "string",
-      "bannerImage": "string (URL banner 16:9)",
       "description": "string",
-      "genres": ["Action", "Fantasy", "Shonen"],
-      "metaTags": ["Sub | Dub", "HD"],
-      "startWatching": {
-        "episodeId": "string",
-        "seasonNumber": 1,
-        "episodeNumber": 1
+      "banner": {
+        "tall": "string (URL gambar latar vertikal, rasio ~9:16)",
+        "wide": "string (URL gambar latar horizontal, rasio ~16:9)",
+        "name": "string (URL gambar logo/judul transparan)"
       },
-      "userStatus": {
-        "isInWatchlist": "boolean",
-        "progress": {
-          "totalEpisodesInSeries": "number",
-          "watchedEpisodesInSeries": "number"
-        }
+      "metaTags": ["string"],
+      "genres": ["string"],
+      "episodeId": "string",
+      "episodeTitle": "string",
+      "totalSeasons": "number"
+    }
+  ]
+  ```
+
+### 2.2. Baris Konten (Data Feeds)
+
+- **Endpoint**:
+  - `GET /api/v1/home/top-picks`
+  - `GET /api/v1/home/newly-updated-series`
+  - (Endpoint serupa lainnya akan mengikuti pola yang sama)
+- **Tujuan**: Mengambil daftar konten untuk ditampilkan dalam baris horizontal (misalnya, "Pilihan Teratas Untuk Anda").
+- **Struktur Respons**: `Array<Object DataFeedItem>`
+  ```json
+  [
+    {
+      "id": "string",
+      "title": "string",
+      "description": "string",
+      "poster": {
+        "raw": "string (URL gambar poster vertikal)"
       },
+      "metaTags": ["string"],
       "averageRating": "number",
-      "details": { "releaseYear": "string", "status": "string" },
-      "seasons": [
-        {
-          "id": "string",
-          "season": "number",
-          "title": "string",
-          "totalEpisodes": "number"
-        }
-      ]
+      "totalSeasons": "number",
+      "totalEpisodes": "number",
+      "episodeId": "string",
+      "episodeTitle": "string"
     }
-    ```
+  ]
+  ```
 
-- **`GET /api/v1/series/:seriesId/seasons/:seasonId/episodes`**
-  - **Tujuan**: Mengambil daftar semua episode untuk musim tertentu.
-  - **Struktur Respons**: `Array of EpisodeItem`
-    ```json
-    [
+---
+
+## 3. Endpoint Halaman Detail
+
+Data untuk halaman detail series dan daftar episodenya.
+
+### 3.1. Detail Series
+
+- **Endpoint**: `GET /api/v1/series/:id`
+- **Tujuan**: Mengambil semua informasi tentang satu series tertentu untuk ditampilkan di halaman detailnya.
+- **Struktur Respons**: `Object Series`
+  ```json
+  {
+    "title": "string",
+    "description": "string",
+    "poster": {
+      "tall": "string (URL gambar poster vertikal untuk mobile)",
+      "wide": "string (URL gambar poster lebar untuk desktop)"
+    },
+    "genres": ["string"],
+    "metaTags": ["string"],
+    "averageRating": "number",
+    "totalRating": "number",
+    "licence": "string",
+    "details": {
+      "Audio": "string (cth: 'Japanese, English')",
+      "Subtitles": "string (cth: 'English, Spanish, ...')",
+      "Publisher": "string (cth: 'Kadokawa')"
+    },
+    "episodeId": "string",
+    "episodeTitle": "string",
+    "seasons": [
       {
         "id": "string",
+        "season": "number",
         "title": "string",
-        "episode": "number",
-        "thumbnail": "string (URL gambar thumbnail)",
-        "duration": "number"
+        "totalEpisodes": "number"
       }
     ]
-    ```
+  }
+  ```
+  **Catatan Penting:**
+  - `details`: Ini adalah objek key-value. Key akan ditampilkan sebagai label (mis. "Audio:").
+  - `seasons`: Ini adalah daftar musim yang tersedia untuk series tersebut, digunakan untuk navigasi musim.
 
-- **`GET /api/v1/episodes/:id`**
-  - **Tujuan**: Mengambil data untuk halaman pemutar video.
-  - **Struktur Respons**: `Object Episode`
-    ```json
-    {
-      "title": "string",
-      "thumbnail": "string (URL gambar thumbnail episode)",
-      "duration": "number",
-      "description": "string",
-      "media": {
-        "hls": { "main": "string (URL ke master.m3u8)" }
-      },
-      "series": {
+### 3.2. Daftar Episode per Musim
+
+- **Endpoint**: `GET /api/v1/series/:seriesId/seasons/:seasonId/episodes`
+- **Tujuan**: Mengambil daftar episode untuk satu musim tertentu.
+- **Struktur Respons**: `Object SeasonEpisodes`
+  ```json
+  {
+    "totalEpisodes": "number",
+    "episodes": [
+      {
         "id": "string",
-        "title": "string"
-      },
-      "prevEpisode": { "id": "string", "title": "string", "season": "number" } | null,
-      "nextEpisode": { "id": "string", "title": "string", "season": "number" } | null
-    }
-    ```
-
-#### 3. Data Tambahan
-
-- **`GET /api/v1/genres`**
-- **`GET /api/v1/meta-tags`**
-  - **Tujuan**: Mengisi filter dan menampilkan tag.
-  - **Struktur Respons**: `Array of Objects`
-    ```json
-    [
-      { "id": "string", "title": "string" }
+        "episode": "number",
+        "title": "string",
+        "description": "string",
+        "thumbnail": "string (URL gambar thumbnail episode)",
+        "duration": "number (dalam detik)",
+        "releaseDate": "string (format ISO 8601, cth: '2024-01-01T00:00:00Z')",
+        "metaTags": ["string"],
+        "isWatched": "boolean",
+        "progress": "number (dalam detik, menunjukkan seberapa jauh pengguna telah menonton)"
+      }
     ]
-    ```
+  }
+  ```
 
-Dengan mengikuti panduan ini, Anda dapat membangun backend Go yang akan terintegrasi dengan mulus dengan frontend Next.js yang sudah ada.
+---
+
+## 4. Endpoint Halaman Pemutar Video (Akan Didefinisikan)
+
+Spesifikasi untuk `GET /api/v1/episodes/:id` (untuk mengambil data pemutar video) akan ditambahkan di sini. Analisis `client/src/app/(main)/watch/[id]/[title]/page.tsx` akan diperlukan untuk ini. Untuk saat ini, fokus pada implementasi endpoint di atas.
