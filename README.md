@@ -1,4 +1,4 @@
-# Proyek Layanan Streaming: Spesifikasi API Backend
+# Proyek Layanan Streaming: Spesifikasi API Backend (v2 - Lengkap)
 
 ## 1. Ikhtisar
 
@@ -15,8 +15,6 @@ NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
 ---
 
 ## 2. Endpoints Halaman Utama (Homepage)
-
-Data untuk halaman utama diambil melalui beberapa endpoint yang berbeda.
 
 ### 2.1. Banner Utama
 
@@ -48,8 +46,7 @@ Data untuk halaman utama diambil melalui beberapa endpoint yang berbeda.
 - **Endpoint**:
   - `GET /api/v1/home/top-picks`
   - `GET /api/v1/home/newly-updated-series`
-  - (Endpoint serupa lainnya akan mengikuti pola yang sama)
-- **Tujuan**: Mengambil daftar konten untuk ditampilkan dalam baris horizontal (misalnya, "Pilihan Teratas Untuk Anda").
+- **Tujuan**: Mengambil daftar konten untuk ditampilkan dalam baris horizontal.
 - **Struktur Respons**: `Array<Object DataFeedItem>`
   ```json
   [
@@ -72,22 +69,20 @@ Data untuk halaman utama diambil melalui beberapa endpoint yang berbeda.
 
 ---
 
-## 3. Endpoint Halaman Detail
-
-Data untuk halaman detail series dan daftar episodenya.
+## 3. Endpoints Halaman Detail
 
 ### 3.1. Detail Series
 
 - **Endpoint**: `GET /api/v1/series/:id`
-- **Tujuan**: Mengambil semua informasi tentang satu series tertentu untuk ditampilkan di halaman detailnya.
+- **Tujuan**: Mengambil semua informasi tentang satu series tertentu.
 - **Struktur Respons**: `Object Series`
   ```json
   {
     "title": "string",
     "description": "string",
     "poster": {
-      "tall": "string (URL gambar poster vertikal untuk mobile)",
-      "wide": "string (URL gambar poster lebar untuk desktop)"
+      "tall": "string (URL gambar poster vertikal)",
+      "wide": "string (URL gambar poster lebar)"
     },
     "genres": ["string"],
     "metaTags": ["string"],
@@ -111,9 +106,6 @@ Data untuk halaman detail series dan daftar episodenya.
     ]
   }
   ```
-  **Catatan Penting:**
-  - `details`: Ini adalah objek key-value. Key akan ditampilkan sebagai label (mis. "Audio:").
-  - `seasons`: Ini adalah daftar musim yang tersedia untuk series tersebut, digunakan untuk navigasi musim.
 
 ### 3.2. Daftar Episode per Musim
 
@@ -142,6 +134,42 @@ Data untuk halaman detail series dan daftar episodenya.
 
 ---
 
-## 4. Endpoint Halaman Pemutar Video (Akan Didefinisikan)
+## 4. Endpoint Halaman Pemutar Video
 
-Spesifikasi untuk `GET /api/v1/episodes/:id` (untuk mengambil data pemutar video) akan ditambahkan di sini. Analisis `client/src/app/(main)/watch/[id]/[title]/page.tsx` akan diperlukan untuk ini. Untuk saat ini, fokus pada implementasi endpoint di atas.
+### 4.1. Detail Episode & Data Pemutar
+
+- **Endpoint**: `GET /api/v1/episodes/:id`
+- **Tujuan**: Mengambil semua data yang diperlukan untuk halaman pemutar video, termasuk URL media dan metadata terkait.
+- **Struktur Respons**: `Object EpisodeDetails`
+  ```json
+  {
+    "media": "string (URL ke file video, misal .m3u8 untuk HLS)",
+    "duration": "number (dalam detik)",
+    "title": "string (judul episode)",
+    "description": "string (deskripsi episode)",
+    "metaTags": ["string"],
+    "releaseDate": "string (format ISO 8601)",
+    "likes": "number",
+    "dislikes": "number",
+    "details": {
+      "Audio": "string",
+      "Subtitles": "string"
+    },
+    "series": {
+      "id": "string",
+      "title": "string",
+      "averageRating": "number",
+      "totalRating": "number"
+    },
+    "prevEpisode": {
+      "id": "string",
+      "title": "string",
+      "thumbnail": "string (URL thumbnail)"
+    } | null,
+    "nextEpisode": {
+      "id": "string",
+      "title": "string",
+      "thumbnail": "string (URL thumbnail)"
+    } | null
+  }
+  ```
