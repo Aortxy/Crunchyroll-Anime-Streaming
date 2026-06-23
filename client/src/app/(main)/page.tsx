@@ -2,7 +2,7 @@ import {
   getBannerItems,
   getTopPicksForYou,
   getNewlyUpdatedSeries,
-} from "@/lib/mongodb/CRUD/getHomePage";
+} from "@/lib/api/CRUD/getHomePage";
 
 import Banner from "./_components/banner";
 import DataFeedRow from "./_components/dataFeedRow";

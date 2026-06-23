@@ -6,7 +6,7 @@ import VideoPlayer from "./_components/videoPlayer";
 import MediaDetails from "./_components/currentMedia";
 import Videos from "./_components/videos";
 
-import getEpisode, { getTitle } from "@/lib/mongodb/CRUD/getEpisode";
+import getEpisode, { getTitle } from "@/lib/api/CRUD/getEpisode";
 
 import "./page.css";
 

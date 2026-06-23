@@ -6,7 +6,7 @@ import Banner from "./_components/banner";
 import Details from "./_components/details";
 import SeasonWithNavigation from "./_components/seasonWithNavigation";
 
-import getSeries, { getTitle } from "@/lib/mongodb/CRUD/getSeries";
+import getSeries, { getTitle } from "@/lib/api/CRUD/getSeries";
 
 type PageProps = { params: Promise<{ id: string; title: string }> };
 

@@ -1,5 +1,5 @@
-import getMetaTags from "@/lib/mongodb/CRUD/getMetaTags";
-import getGenres from "@/lib/mongodb/CRUD/getGenres";
+import getMetaTags from "@/lib/api/CRUD/getMetaTags";
+import getGenres from "@/lib/api/CRUD/getGenres";
 
 import CreateSeriesForm from "./_components/createSeriesForm";
 
